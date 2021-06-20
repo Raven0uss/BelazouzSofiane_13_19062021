@@ -1,51 +1,63 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { logout } from "../redux/actions/user";
 
 import argentBankLogo from "../assets/img/argentBankLogo.png";
 
-const Header = () => {
+// Redux Containers Props Injection
+
+const mapStateToProps = (state) => {
+  return {
+    data: state.user.data,
+    isAuth: state.user.isAuth,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onLogout: () => {
+      dispatch(logout());
+    },
+  };
+};
+
+// Component
+
+let Header = ({ data, isAuth, onLogout }) => {
   return (
     <nav className="main-nav">
-      <a className="main-nav-logo" href="./index.html">
+      <Link to="/" className="main-nav-logo">
         <img
           className="main-nav-logo-image"
           src={argentBankLogo}
           alt="Argent Bank Logo"
         />
         <h1 className="sr-only">Argent Bank</h1>
-      </a>
+      </Link>
       <div>
-        <a className="main-nav-item" href="./sign-in.html">
-          <i className="fa fa-user-circle"></i>
-          Sign In
-        </a>
+        {isAuth ? (
+          <>
+            <Link className="main-nav-item" to="profile">
+              <i className="fa fa-user-circle"></i>
+              {data.name}
+            </Link>
+            <Link className="main-nav-item" to="/" onClick={onLogout}>
+              <i className="fa fa-sign-out"></i>
+              Sign Out
+            </Link>
+          </>
+        ) : (
+          <Link to="/sign-in" className="main-nav-item">
+            <i className="fa fa-user-circle"></i>
+            Sign In
+          </Link>
+        )}
       </div>
     </nav>
   );
 };
 
+Header = connect(mapStateToProps, mapDispatchToProps)(Header);
+
 export default Header;
-
-/*
-Header when connected
-
-<nav className="main-nav">
-<a className="main-nav-logo" href="./index.html">
-  <img
-    className="main-nav-logo-image"
-    src="./img/argentBankLogo.png"
-    alt="Argent Bank Logo"
-  />
-  <h1 className="sr-only">Argent Bank</h1>
-</a>
-<div>
-  <a className="main-nav-item" href="./user.html">
-    <i className="fa fa-user-circle"></i>
-    Tony
-  </a>
-  <a className="main-nav-item" href="./index.html">
-    <i className="fa fa-sign-out"></i>
-    Sign Out
-  </a>
-</div>
-</nav>
-*/

@@ -41,9 +41,7 @@ const routes = [
 const Router = () => {
   return (
     <BrowserRouter>
-      {/* <div id="app-wrap"> */}
       <Header />
-      {/*  <WrapComponent> */}
       <Switch>
         {routes.map((route) => {
           return (
@@ -56,8 +54,6 @@ const Router = () => {
           );
         })}
       </Switch>
-      {/* </WrapComponent>
-        </div>*/}
       <Footer />
     </BrowserRouter>
   );

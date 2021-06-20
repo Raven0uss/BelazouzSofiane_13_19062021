@@ -1,12 +1,15 @@
 import React from "react";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { login } from "../redux/actions/user";
+
+import { useHistory } from "react-router-dom";
 
 // Redux Containers Props Injection
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user,
+    isAuth: state.user.isAuth,
   };
 };
 
@@ -20,36 +23,62 @@ const mapDispatchToProps = (dispatch) => {
 
 // Component
 
-let Login = ({ onLogin, user }) => {
-  React.useEffect(() => {}, []);
+let Login = ({ onLogin, isAuth }) => {
+  const history = useHistory();
+
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [remember, setRemember] = React.useState(false);
+
+  if (isAuth) return <Redirect to="/" />;
   return (
     <>
-      <button onClick={() => onLogin("Hello world")}>Test</button>
-      <button onClick={() => console.log(user)}>Log</button>
       <main className="main bg-dark">
         <section className="sign-in-content">
           <i className="fa fa-user-circle sign-in-icon"></i>
           <h1>Sign In</h1>
           <form>
             <div className="input-wrapper">
-              <label for="username">Username</label>
-              <input type="text" id="username" />
+              <label htmlFor="username">Username</label>
+              <input
+                type="text"
+                id="username"
+                value={username}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
+              />
             </div>
             <div className="input-wrapper">
-              <label for="password">Password</label>
-              <input type="password" id="password" />
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
             </div>
             <div className="input-remember">
-              <input type="checkbox" id="remember-me" />
-              <label for="remember-me">Remember me</label>
+              <input
+                type="checkbox"
+                id="remember-me"
+                checked={remember}
+                onChange={(e) => setRemember(e.target.checked)}
+              />
+              <label htmlFor="remember-me">Remember me</label>
             </div>
-            {/* <!-- PLACEHOLDER DUE TO STATIC SITE --> */}
-            <a href="./user.html" className="sign-in-button">
+
+            <button
+              className="sign-in-button"
+              onClick={() => {
+                onLogin("Mourad");
+                history.push("/profile");
+              }}
+            >
               Sign In
-            </a>
-            {/* <!-- SHOULD BE THE BUTTON BELOW --> */}
-            {/* <!-- <button className="sign-in-button">Sign In</button> -->
-          <!--  --> */}
+            </button>
           </form>
         </section>
       </main>

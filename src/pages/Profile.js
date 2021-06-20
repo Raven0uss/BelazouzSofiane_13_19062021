@@ -1,7 +1,15 @@
 import React from "react";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
-let Profile = ({ dispatch }) => {
+const mapStateToProps = (state) => {
+  return {
+    isAuth: state.user.isAuth,
+  };
+};
+
+let Profile = ({ isAuth }) => {
+  if (!isAuth) return <Redirect to="/sign-in" />;
   return (
     <main className="main bg-dark">
       <div className="header">
@@ -47,6 +55,6 @@ let Profile = ({ dispatch }) => {
   );
 };
 
-Profile = connect()(Profile);
+Profile = connect(mapStateToProps)(Profile);
 
 export default Profile;
