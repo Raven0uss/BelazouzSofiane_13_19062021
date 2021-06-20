@@ -1,11 +1,6 @@
 import React from "react";
+import Router from "./navigation/Router";
 
-const App = () => {
-  return (
-    <div>
-      <h1>:)</h1>
-    </div>
-  );
-};
+const App = () => <Router />;
 
 export default App;
