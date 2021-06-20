@@ -8,21 +8,21 @@ import Profile from "../pages/Profile";
 
 import NotFound from "./NotFound";
 
-// import Header from "../layout/Header";
-// import Footer from "../layout/Footer";
+import Header from "../layout/Header";
+import Footer from "../layout/Footer";
 
 const routes = [
   {
-    id: "login",
+    id: "home",
     path: "/",
     exact: true,
-    component: (props) => <Login {...props} />,
+    component: (props) => <Home {...props} />,
   },
   {
-    id: "home",
-    path: "/home",
+    id: "login",
+    path: "/sign-in",
     exact: true,
-    component: (props) => <Home {...props} />,
+    component: (props) => <Login {...props} />,
   },
   {
     id: "profile",
@@ -42,8 +42,8 @@ const Router = () => {
   return (
     <BrowserRouter>
       {/* <div id="app-wrap"> */}
-      {/* <Header />
-          <WrapComponent> */}
+      <Header />
+      {/*  <WrapComponent> */}
       <Switch>
         {routes.map((route) => {
           return (
@@ -57,8 +57,8 @@ const Router = () => {
         })}
       </Switch>
       {/* </WrapComponent>
-        </div>
-        <Footer /> */}
+        </div>*/}
+      <Footer />
     </BrowserRouter>
   );
 };
