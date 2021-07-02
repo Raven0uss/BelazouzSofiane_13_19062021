@@ -1,22 +1,63 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import { profileHTTP } from "../api";
+import { setProfile } from "../redux/actions/user";
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onSetProfile: async (payload) => {
+      dispatch(setProfile(payload));
+    },
+  };
+};
 
 const mapStateToProps = (state) => {
   return {
     isAuth: state.user.isAuth,
+    token: state.user.token,
+    data: state.user.data,
   };
 };
 
-let Profile = ({ isAuth }) => {
-  if (!isAuth) return <Redirect to="/sign-in" />;
+let Profile = ({ isAuth, token, data, onSetProfile }) => {
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(false);
+
+  React.useEffect(() => {
+    const getProfileData = async () => {
+      const response = await profileHTTP({ token });
+      try {
+        const userData = {
+          firstName: response.body.firstName,
+          lastName: response.body.lastName,
+          email: response.body.email,
+          id: response.body.id,
+        };
+        onSetProfile(userData);
+        setLoading(!response);
+      } catch (err) {
+        setError(true);
+        setLoading(false);
+      }
+    };
+
+    if (token === null) {
+      setLoading(false);
+    } else getProfileData();
+  }, [token, onSetProfile]);
+
+  if (loading) return null;
+  if (!isAuth || token === null || error) return <Redirect to="/sign-in" />;
+
+  console.log(data);
   return (
     <main className="main bg-dark">
       <div className="header">
         <h1>
           Welcome back
           <br />
-          Tony Jarvis!
+          {data.firstName} {data.lastName}
         </h1>
         <button className="edit-button">Edit Name</button>
       </div>
@@ -55,6 +96,6 @@ let Profile = ({ isAuth }) => {
   );
 };
 
-Profile = connect(mapStateToProps)(Profile);
+Profile = connect(mapStateToProps, mapDispatchToProps)(Profile);
 
 export default Profile;

@@ -1,12 +1,19 @@
-export const login = (name) => {
+export const login = (payload) => {
   return {
     type: "LOGIN",
-    name,
+    payload,
   };
 };
 
 export const logout = () => {
   return {
     type: "LOGOUT",
+  };
+};
+
+export const setProfile = (payload) => {
+  return {
+    type: "SET_PROFILE",
+    payload,
   };
 };

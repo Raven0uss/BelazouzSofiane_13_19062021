@@ -1,9 +1,10 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { login } from "../redux/actions/user";
 
 import { useHistory } from "react-router-dom";
+import { loginHTTP } from "../api";
+import { login } from "../redux/actions/user";
 
 // Redux Containers Props Injection
 
@@ -15,8 +16,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onLogin: (name) => {
-      dispatch(login(name));
+    onLogin: async (token) => {
+      console.log(token);
+      dispatch(login(token));
     },
   };
 };
@@ -30,6 +32,23 @@ let Login = ({ onLogin, isAuth }) => {
   const [password, setPassword] = React.useState("");
   const [remember, setRemember] = React.useState(false);
 
+  const [status, setStatus] = React.useState({
+    status: undefined,
+    message: undefined,
+  });
+
+  const loginAction = async () => {
+    const response = await loginHTTP({
+      email: username,
+      password,
+    });
+    setStatus(response);
+    if (response.status !== 200) return undefined;
+    const { token } = response.body;
+    onLogin(token);
+    history.push("/profile");
+  };
+
   if (isAuth) return <Redirect to="/" />;
   return (
     <>
@@ -37,49 +56,46 @@ let Login = ({ onLogin, isAuth }) => {
         <section className="sign-in-content">
           <i className="fa fa-user-circle sign-in-icon"></i>
           <h1>Sign In</h1>
-          <form>
-            <div className="input-wrapper">
-              <label htmlFor="username">Username</label>
-              <input
-                type="text"
-                id="username"
-                value={username}
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                }}
-              />
-            </div>
-            <div className="input-wrapper">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-              />
-            </div>
-            <div className="input-remember">
-              <input
-                type="checkbox"
-                id="remember-me"
-                checked={remember}
-                onChange={(e) => setRemember(e.target.checked)}
-              />
-              <label htmlFor="remember-me">Remember me</label>
-            </div>
-
-            <button
-              className="sign-in-button"
-              onClick={() => {
-                onLogin("Mourad");
-                history.push("/profile");
+          <div className="input-wrapper">
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
               }}
-            >
-              Sign In
-            </button>
-          </form>
+            />
+          </div>
+          <div className="input-wrapper">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
+          </div>
+          <div className="input-remember">
+            <input
+              type="checkbox"
+              id="remember-me"
+              checked={remember}
+              onChange={(e) => setRemember(e.target.checked)}
+            />
+            <label htmlFor="remember-me">Remember me</label>
+          </div>
+          {status.status !== 200 && <p>{status.message}</p>}
+          <button
+            className="sign-in-button"
+            onClick={() => {
+              loginAction();
+            }}
+          >
+            Sign In
+          </button>
         </section>
       </main>
     </>
