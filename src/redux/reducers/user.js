@@ -22,7 +22,6 @@ const user = (state = initialState, action) => {
         data: payload,
       };
     case "UPDATE_PROFILE":
-      console.log(payload);
       return {
         ...state,
         data: {

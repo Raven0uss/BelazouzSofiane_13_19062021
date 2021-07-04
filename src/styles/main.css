@@ -311,5 +311,9 @@ button[class$="-button"]:hover {
 .button-disabled,
 .button-disabled:hover {
   opacity: 0.5;
-  cursor: not-allowed;
+  cursor: default;
+}
+
+.main-nav-item > i {
+  margin-right: 5px;
 }

@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { profileHTTP } from "../api";
 import { setProfile } from "../redux/actions/user";
-import EditNameModal from "../components/EditNameModal";
+import EditNameForm from "../components/EditNameForm";
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -24,7 +24,7 @@ const mapStateToProps = (state) => {
 let Profile = ({ isAuth, token, data, onSetProfile }) => {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(false);
-  const [editModal, setEditModal] = React.useState(false);
+  const [editModal, setEditName] = React.useState(false);
 
   React.useEffect(() => {
     const getProfileData = async () => {
@@ -52,26 +52,32 @@ let Profile = ({ isAuth, token, data, onSetProfile }) => {
   if (loading) return null;
   if (!isAuth || token === null || error) return <Redirect to="/sign-in" />;
 
-  console.log(data);
   return (
     <main className="main bg-dark">
-      {editModal && (
-        <EditNameModal setEditModal={setEditModal} editModal={editModal} />
-      )}
       <div className="header">
-        <h1>
-          Welcome back
-          <br />
-          {data.firstName} {data.lastName}
-        </h1>
-        <button
-          className="edit-button"
-          onClick={() => {
-            setEditModal(true);
-          }}
-        >
-          Edit Name
-        </button>
+        {editModal ? (
+          <h1>
+            Welcome back
+            <br />
+            <EditNameForm setEditName={setEditName} />
+          </h1>
+        ) : (
+          <>
+            <h1>
+              Welcome back
+              <br />
+              {data.firstName} {data.lastName}
+            </h1>
+            <button
+              className="edit-button"
+              onClick={() => {
+                setEditName(true);
+              }}
+            >
+              Edit Name
+            </button>
+          </>
+        )}
       </div>
       <h2 className="sr-only">Accounts</h2>
       <section className="account">

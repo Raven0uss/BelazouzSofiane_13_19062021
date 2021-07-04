@@ -11,7 +11,6 @@ const loginHTTP = async ({ email, password }) => {
   };
 
   const response = await axios.post(route, body).catch((error) => {
-    console.log("response" in error);
     if ("response" in error) return error.response;
     return {
       status: 500,
@@ -38,7 +37,6 @@ const profileHTTP = async ({ token }) => {
       message: "An error occured with the server.",
     };
   });
-  console.log(response);
   return response.data;
 };
 

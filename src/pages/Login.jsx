@@ -23,7 +23,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onLogin: async (token) => {
-      console.log(token);
       dispatch(login(token));
     },
   };
