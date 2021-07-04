@@ -5,6 +5,8 @@ const initialState = {
 };
 
 const user = (state = initialState, action) => {
+  const { payload } = action;
+
   switch (action.type) {
     case "LOGIN":
       const { payload: token } = action;
@@ -15,10 +17,18 @@ const user = (state = initialState, action) => {
         data: {},
       };
     case "SET_PROFILE":
-      const { payload } = action;
       return {
         ...state,
         data: payload,
+      };
+    case "UPDATE_PROFILE":
+      console.log(payload);
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          ...payload,
+        },
       };
     case "LOGOUT":
       return {

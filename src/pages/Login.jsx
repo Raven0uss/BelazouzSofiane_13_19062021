@@ -5,6 +5,12 @@ import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { loginHTTP } from "../api";
 import { login } from "../redux/actions/user";
+import styled from "styled-components";
+
+const ErrorMessage = styled.p`
+  color: #b02525;
+  font-weight: bold;
+`;
 
 // Redux Containers Props Injection
 
@@ -49,6 +55,8 @@ let Login = ({ onLogin, isAuth }) => {
     history.push("/profile");
   };
 
+  const loginDisabled = () => username.length === 0 || password.length === 0;
+
   if (isAuth) return <Redirect to="/" />;
   return (
     <>
@@ -87,12 +95,17 @@ let Login = ({ onLogin, isAuth }) => {
             />
             <label htmlFor="remember-me">Remember me</label>
           </div>
-          {status.status !== 200 && <p>{status.message}</p>}
+          {status.status !== 200 && (
+            <ErrorMessage>{status.message}</ErrorMessage>
+          )}
           <button
-            className="sign-in-button"
+            className={`sign-in-button ${
+              loginDisabled() ? "button-disabled" : ""
+            }`}
             onClick={() => {
               loginAction();
             }}
+            disabled={loginDisabled()}
           >
             Sign In
           </button>

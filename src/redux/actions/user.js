@@ -17,3 +17,10 @@ export const setProfile = (payload) => {
     payload,
   };
 };
+
+export const updateProfile = (payload) => {
+  return {
+    type: "UPDATE_PROFILE",
+    payload,
+  };
+};
